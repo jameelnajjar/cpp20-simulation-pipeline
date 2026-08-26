@@ -1,0 +1,13 @@
+Drone Mapper Simulation Report
+==============================
+Generated: 2026-07-05T16:06:59Z
+Metric:    output_map_accuracy
+
+Run 1:
+  map:          ../inputs/scenario_small/map.npy
+  output_map:   ../inputs/scenario_small/output_results/output_map_map_2026-07-05.npy
+  score:        67.6
+  steps:        2000
+  status:       max_steps
+
+Average score: 67.6 / 100

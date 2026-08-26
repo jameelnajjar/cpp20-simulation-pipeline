@@ -1,0 +1,20 @@
+score_report:
+  generated_at_utc: 2026-07-05T03:34:08Z
+  metric: output_map_accuracy
+  score_range:
+    min: 0
+    max: 100
+  error_score: -1
+  summary:
+    total_runs: 1
+    scored_runs: 1
+    error_runs: 0
+    average_score: 99.555555555555557
+    min_score: 99.555555555555557
+    max_score: 99.555555555555557
+  runs:
+    - simulation_map: /mnt/c/Users/97254/OneDrive/Desktop/HW2_CPP/inputs/scenario_obstacles/map.npy
+      output_map_file: /mnt/c/Users/97254/OneDrive/Desktop/HW2_CPP/inputs/scenario_obstacles/original_output/output_results/output_map_map_2026-07-05.npy
+      mission_score: 99.555555555555557
+      steps: 3000
+      status: max_steps

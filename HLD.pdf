@@ -1,0 +1,907 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R] /Count 6 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Length 3106 >>
+stream
+BT
+1 0 0 1 50 792 Tm
+/F2 16 Tf
+(High-Level Design ? Assignment 2: Drone Mapper Simulation) Tj
+1 0 0 1 50 756.0 Tm
+/F2 13 Tf
+(Architecture Overview) Tj
+/F1 10 Tf
+1 0 0 1 50 731.0 Tm
+(Assignment 2 refactors the drone mapping system into a fully decoupled, testable component) Tj
+1 0 0 1 50 717.0 Tm
+(hierarchy.) Tj
+/F1 10 Tf
+1 0 0 1 50 703.0 Tm
+(All components communicate through well-defined interfaces, with dependency injection enabling) Tj
+/F1 10 Tf
+1 0 0 1 50 689.0 Tm
+(independent testing of each component.) Tj
+1 0 0 1 50 661.0 Tm
+/F2 13 Tf
+(Component Hierarchy) Tj
+1 0 0 1 70 629.0 Tm
+/F3 9 Tf
+(main\(\)) Tj
+1 0 0 1 70 615.0 Tm
+/F3 9 Tf
+(  ??? SimulationManager) Tj
+1 0 0 1 70 601.0 Tm
+/F3 9 Tf
+(        ??? ISimulationRunFactory) Tj
+1 0 0 1 70 587.0 Tm
+/F3 9 Tf
+(              ??? SimulationRunImpl \(one per combination\)) Tj
+1 0 0 1 70 573.0 Tm
+/F3 9 Tf
+(                    ??? IMissionControl \(MissionControlImpl\)) Tj
+1 0 0 1 70 559.0 Tm
+/F3 9 Tf
+(                    ?     ??? IDroneControl \(DroneControlImpl\)) Tj
+1 0 0 1 70 545.0 Tm
+/F3 9 Tf
+(                    ?           ??? IMappingAlgorithm \(MappingAlgorithmImpl\)) Tj
+1 0 0 1 70 531.0 Tm
+/F3 9 Tf
+(                    ?           ??? ILidar \(MockLidar\)) Tj
+1 0 0 1 70 517.0 Tm
+/F3 9 Tf
+(                    ?           ??? IGPS \(MockGPS\)) Tj
+1 0 0 1 70 503.0 Tm
+/F3 9 Tf
+(                    ?           ??? IDroneMovement \(MockMovement\)) Tj
+1 0 0 1 70 489.0 Tm
+/F3 9 Tf
+(                    ??? IMap3D \(hidden, Map3DImpl from .npy\)) Tj
+1 0 0 1 70 475.0 Tm
+/F3 9 Tf
+(                    ??? IMutableMap3D \(output, Map3DImpl empty\)) Tj
+1 0 0 1 50 440.0 Tm
+/F2 13 Tf
+(Class Diagram) Tj
+1 0 0 1 70 408.0 Tm
+/F3 9 Tf
+(classDiagram) Tj
+1 0 0 1 70 394.0 Tm
+/F3 9 Tf
+(    direction TB) Tj
+1 0 0 1 70 380.0 Tm
+/F3 9 Tf
+() Tj
+1 0 0 1 70 366.0 Tm
+/F3 9 Tf
+(    class ISimulation {) Tj
+1 0 0 1 70 352.0 Tm
+/F3 9 Tf
+(        <<interface>>) Tj
+1 0 0 1 70 338.0 Tm
+/F3 9 Tf
+(        +run\(composition, output_path\) report) Tj
+1 0 0 1 70 324.0 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 310.0 Tm
+/F3 9 Tf
+(    class ISimulationRun {) Tj
+1 0 0 1 70 296.0 Tm
+/F3 9 Tf
+(        <<interface>>) Tj
+1 0 0 1 70 282.0 Tm
+/F3 9 Tf
+(        +run\(\) SimulationResult) Tj
+1 0 0 1 70 268.0 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 254.0 Tm
+/F3 9 Tf
+(    class ISimulationRunFactory {) Tj
+1 0 0 1 70 240.0 Tm
+/F3 9 Tf
+(        <<interface>>) Tj
+1 0 0 1 70 226.0 Tm
+/F3 9 Tf
+(        +create\(sim,mission,drone,lidar,output_path\) ISimulationRun) Tj
+1 0 0 1 70 212.0 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 198.0 Tm
+/F3 9 Tf
+(    class IMissionControl {) Tj
+1 0 0 1 70 184.0 Tm
+/F3 9 Tf
+(        <<interface>>) Tj
+1 0 0 1 70 170.0 Tm
+/F3 9 Tf
+(        +runMission\(\) MissionRunResult) Tj
+1 0 0 1 70 156.0 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 142.0 Tm
+/F3 9 Tf
+(    class IDroneControl {) Tj
+1 0 0 1 70 128.0 Tm
+/F3 9 Tf
+(        <<interface>>) Tj
+1 0 0 1 70 114.0 Tm
+/F3 9 Tf
+(        +step\(\) DroneStepResult) Tj
+1 0 0 1 70 100.0 Tm
+/F3 9 Tf
+(        +state\(\) DroneState) Tj
+1 0 0 1 70 86.0 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 72.0 Tm
+/F3 9 Tf
+(    class ILidar {) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 6 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+8 0 obj
+<< /Length 3127 >>
+stream
+BT
+1 0 0 1 70 792 Tm
+/F3 9 Tf
+(        <<interface>>) Tj
+1 0 0 1 70 778 Tm
+/F3 9 Tf
+(        +scan\(orientation\) LidarScanResult) Tj
+1 0 0 1 70 764 Tm
+/F3 9 Tf
+(        +config\(\) LidarConfigData) Tj
+1 0 0 1 70 750 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 736 Tm
+/F3 9 Tf
+(    class IGPS {) Tj
+1 0 0 1 70 722 Tm
+/F3 9 Tf
+(        <<interface>>) Tj
+1 0 0 1 70 708 Tm
+/F3 9 Tf
+(        +position\(\) Position3D) Tj
+1 0 0 1 70 694 Tm
+/F3 9 Tf
+(        +heading\(\) Orientation) Tj
+1 0 0 1 70 680 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 666 Tm
+/F3 9 Tf
+(    class IDroneMovement {) Tj
+1 0 0 1 70 652 Tm
+/F3 9 Tf
+(        <<interface>>) Tj
+1 0 0 1 70 638 Tm
+/F3 9 Tf
+(        +rotate\(dir, angle\) MovementResult) Tj
+1 0 0 1 70 624 Tm
+/F3 9 Tf
+(        +advance\(distance\) MovementResult) Tj
+1 0 0 1 70 610 Tm
+/F3 9 Tf
+(        +elevate\(distance\) MovementResult) Tj
+1 0 0 1 70 596 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 582 Tm
+/F3 9 Tf
+(    class IMappingAlgorithm {) Tj
+1 0 0 1 70 568 Tm
+/F3 9 Tf
+(        <<interface>>) Tj
+1 0 0 1 70 554 Tm
+/F3 9 Tf
+(        +nextStep\(state, scan*\) MappingStepCommand) Tj
+1 0 0 1 70 540 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 526 Tm
+/F3 9 Tf
+(    class IMap3D {) Tj
+1 0 0 1 70 512 Tm
+/F3 9 Tf
+(        <<interface>>) Tj
+1 0 0 1 70 498 Tm
+/F3 9 Tf
+(        +atVoxel\(pos\) VoxelOccupancy) Tj
+1 0 0 1 70 484 Tm
+/F3 9 Tf
+(        +getMapConfig\(\) MapConfig) Tj
+1 0 0 1 70 470 Tm
+/F3 9 Tf
+(        +isInBounds\(pos\) bool) Tj
+1 0 0 1 70 456 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 442 Tm
+/F3 9 Tf
+(    class IMutableMap3D {) Tj
+1 0 0 1 70 428 Tm
+/F3 9 Tf
+(        <<interface>>) Tj
+1 0 0 1 70 414 Tm
+/F3 9 Tf
+(        +set\(pos, value\) void) Tj
+1 0 0 1 70 400 Tm
+/F3 9 Tf
+(        +save\(path\) void) Tj
+1 0 0 1 70 386 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 372 Tm
+/F3 9 Tf
+() Tj
+1 0 0 1 70 358 Tm
+/F3 9 Tf
+(    class SimulationManager {) Tj
+1 0 0 1 70 344 Tm
+/F3 9 Tf
+(        -unique_ptr~ISimulationRunFactory~ run_factory_) Tj
+1 0 0 1 70 330 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 316 Tm
+/F3 9 Tf
+(    class SimulationRunFactoryImpl {) Tj
+1 0 0 1 70 302 Tm
+/F3 9 Tf
+(        +create\(...\) ISimulationRun) Tj
+1 0 0 1 70 288 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 274 Tm
+/F3 9 Tf
+(    class SimulationRunImpl {) Tj
+1 0 0 1 70 260 Tm
+/F3 9 Tf
+(        -unique_ptr~IMutableMap3D~ hidden_map_) Tj
+1 0 0 1 70 246 Tm
+/F3 9 Tf
+(        -unique_ptr~IMutableMap3D~ output_map_) Tj
+1 0 0 1 70 232 Tm
+/F3 9 Tf
+(        -unique_ptr~IGPS~ gps_) Tj
+1 0 0 1 70 218 Tm
+/F3 9 Tf
+(        -...) Tj
+1 0 0 1 70 204 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 190 Tm
+/F3 9 Tf
+(    class MissionControlImpl {) Tj
+1 0 0 1 70 176 Tm
+/F3 9 Tf
+(        -MissionConfigData mission_) Tj
+1 0 0 1 70 162 Tm
+/F3 9 Tf
+(        -IDroneControl& drone_control_) Tj
+1 0 0 1 70 148 Tm
+/F3 9 Tf
+(        -IMutableMap3D& output_map_) Tj
+1 0 0 1 70 134 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 120 Tm
+/F3 9 Tf
+(    class DroneControlImpl {) Tj
+1 0 0 1 70 106 Tm
+/F3 9 Tf
+(        -IMappingAlgorithm& algorithm_) Tj
+1 0 0 1 70 92 Tm
+/F3 9 Tf
+(        -ILidar& lidar_) Tj
+1 0 0 1 70 78 Tm
+/F3 9 Tf
+(        -IGPS& gps_) Tj
+1 0 0 1 70 64 Tm
+/F3 9 Tf
+(        -IDroneMovement& movement_) Tj
+ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 8 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+10 0 obj
+<< /Length 3085 >>
+stream
+BT
+1 0 0 1 70 792 Tm
+/F3 9 Tf
+(        -IMutableMap3D& output_map_) Tj
+1 0 0 1 70 778 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 764 Tm
+/F3 9 Tf
+(    class MappingAlgorithmImpl {) Tj
+1 0 0 1 70 750 Tm
+/F3 9 Tf
+(        -BFS frontier) Tj
+1 0 0 1 70 736 Tm
+/F3 9 Tf
+(        -scan queue) Tj
+1 0 0 1 70 722 Tm
+/F3 9 Tf
+(        -nav path) Tj
+1 0 0 1 70 708 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 694 Tm
+/F3 9 Tf
+(    class MockLidar {) Tj
+1 0 0 1 70 680 Tm
+/F3 9 Tf
+(        -LidarConfigData config_) Tj
+1 0 0 1 70 666 Tm
+/F3 9 Tf
+(        -IMap3D& map_) Tj
+1 0 0 1 70 652 Tm
+/F3 9 Tf
+(        -IGPS& gps_) Tj
+1 0 0 1 70 638 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 624 Tm
+/F3 9 Tf
+(    class MockGPS {) Tj
+1 0 0 1 70 610 Tm
+/F3 9 Tf
+(        -Position3D position_) Tj
+1 0 0 1 70 596 Tm
+/F3 9 Tf
+(        -Orientation heading_) Tj
+1 0 0 1 70 582 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 568 Tm
+/F3 9 Tf
+(    class MockMovement {) Tj
+1 0 0 1 70 554 Tm
+/F3 9 Tf
+(        -MockGPS& gps_) Tj
+1 0 0 1 70 540 Tm
+/F3 9 Tf
+(        -IMap3D& map_) Tj
+1 0 0 1 70 526 Tm
+/F3 9 Tf
+(        -PhysicalLength drone_radius_) Tj
+1 0 0 1 70 512 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 498 Tm
+/F3 9 Tf
+(    class Map3DImpl {) Tj
+1 0 0 1 70 484 Tm
+/F3 9 Tf
+(        -shared_ptr~NpyArray~ map_) Tj
+1 0 0 1 70 470 Tm
+/F3 9 Tf
+(        -MapConfig config_) Tj
+1 0 0 1 70 456 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 442 Tm
+/F3 9 Tf
+(    class MapsComparison {) Tj
+1 0 0 1 70 428 Tm
+/F3 9 Tf
+(        +compare\(origin, targets\) vector~double~) Tj
+1 0 0 1 70 414 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 400 Tm
+/F3 9 Tf
+(    class ScanResultToVoxels {) Tj
+1 0 0 1 70 386 Tm
+/F3 9 Tf
+(        +applyToMap\(output, origin, heading, scan, lidar\) void) Tj
+1 0 0 1 70 372 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 358 Tm
+/F3 9 Tf
+(    class NpyArray {) Tj
+1 0 0 1 70 344 Tm
+/F3 9 Tf
+(        -vector~uint8_t~ data_) Tj
+1 0 0 1 70 330 Tm
+/F3 9 Tf
+(        +load\(path\) NpyArray) Tj
+1 0 0 1 70 316 Tm
+/F3 9 Tf
+(        +save\(path\) void) Tj
+1 0 0 1 70 302 Tm
+/F3 9 Tf
+(        +at\(x,y,z\) bool) Tj
+1 0 0 1 70 288 Tm
+/F3 9 Tf
+(        +set\(x,y,z,val\) void) Tj
+1 0 0 1 70 274 Tm
+/F3 9 Tf
+(    }) Tj
+1 0 0 1 70 260 Tm
+/F3 9 Tf
+() Tj
+1 0 0 1 70 246 Tm
+/F3 9 Tf
+(    ISimulation <|.. SimulationManager) Tj
+1 0 0 1 70 232 Tm
+/F3 9 Tf
+(    ISimulationRunFactory <|.. SimulationRunFactoryImpl) Tj
+1 0 0 1 70 218 Tm
+/F3 9 Tf
+(    ISimulationRun <|.. SimulationRunImpl) Tj
+1 0 0 1 70 204 Tm
+/F3 9 Tf
+(    IMissionControl <|.. MissionControlImpl) Tj
+1 0 0 1 70 190 Tm
+/F3 9 Tf
+(    IDroneControl <|.. DroneControlImpl) Tj
+1 0 0 1 70 176 Tm
+/F3 9 Tf
+(    ILidar <|.. MockLidar) Tj
+1 0 0 1 70 162 Tm
+/F3 9 Tf
+(    IGPS <|.. MockGPS) Tj
+1 0 0 1 70 148 Tm
+/F3 9 Tf
+(    IDroneMovement <|.. MockMovement) Tj
+1 0 0 1 70 134 Tm
+/F3 9 Tf
+(    IMappingAlgorithm <|.. MappingAlgorithmImpl) Tj
+1 0 0 1 70 120 Tm
+/F3 9 Tf
+(    IMap3D <|-- IMutableMap3D) Tj
+1 0 0 1 70 106 Tm
+/F3 9 Tf
+(    IMutableMap3D <|.. Map3DImpl) Tj
+1 0 0 1 70 92 Tm
+/F3 9 Tf
+(    Map3DImpl --> NpyArray) Tj
+1 0 0 1 70 78 Tm
+/F3 9 Tf
+() Tj
+1 0 0 1 70 64 Tm
+/F3 9 Tf
+(    SimulationManager --> ISimulationRunFactory) Tj
+ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 10 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+12 0 obj
+<< /Length 3698 >>
+stream
+BT
+1 0 0 1 70 792 Tm
+/F3 9 Tf
+(    SimulationRunImpl --> IMutableMap3D) Tj
+1 0 0 1 70 778 Tm
+/F3 9 Tf
+(    SimulationRunImpl --> IGPS) Tj
+1 0 0 1 70 764 Tm
+/F3 9 Tf
+(    SimulationRunImpl --> IDroneMovement) Tj
+1 0 0 1 70 750 Tm
+/F3 9 Tf
+(    SimulationRunImpl --> ILidar) Tj
+1 0 0 1 70 736 Tm
+/F3 9 Tf
+(    SimulationRunImpl --> IMappingAlgorithm) Tj
+1 0 0 1 70 722 Tm
+/F3 9 Tf
+(    SimulationRunImpl --> IDroneControl) Tj
+1 0 0 1 70 708 Tm
+/F3 9 Tf
+(    SimulationRunImpl --> IMissionControl) Tj
+1 0 0 1 70 694 Tm
+/F3 9 Tf
+(    MissionControlImpl --> IDroneControl) Tj
+1 0 0 1 70 680 Tm
+/F3 9 Tf
+(    MissionControlImpl --> IMutableMap3D) Tj
+1 0 0 1 70 666 Tm
+/F3 9 Tf
+(    DroneControlImpl --> IMappingAlgorithm) Tj
+1 0 0 1 70 652 Tm
+/F3 9 Tf
+(    DroneControlImpl --> ILidar) Tj
+1 0 0 1 70 638 Tm
+/F3 9 Tf
+(    DroneControlImpl --> IGPS) Tj
+1 0 0 1 70 624 Tm
+/F3 9 Tf
+(    DroneControlImpl --> IDroneMovement) Tj
+1 0 0 1 70 610 Tm
+/F3 9 Tf
+(    DroneControlImpl --> IMutableMap3D) Tj
+1 0 0 1 70 596 Tm
+/F3 9 Tf
+(    MockLidar --> IMap3D) Tj
+1 0 0 1 70 582 Tm
+/F3 9 Tf
+(    MockMovement --> MockGPS) Tj
+1 0 0 1 70 568 Tm
+/F3 9 Tf
+(    MockMovement --> IMap3D) Tj
+1 0 0 1 50 533.0 Tm
+/F2 13 Tf
+(Sequence Diagram ? Simulation Run) Tj
+1 0 0 1 70 501.0 Tm
+/F3 9 Tf
+(sequenceDiagram) Tj
+1 0 0 1 70 487.0 Tm
+/F3 9 Tf
+(    participant Main) Tj
+1 0 0 1 70 473.0 Tm
+/F3 9 Tf
+(    participant Manager as SimulationManager) Tj
+1 0 0 1 70 459.0 Tm
+/F3 9 Tf
+(    participant Factory as SimulationRunFactoryImpl) Tj
+1 0 0 1 70 445.0 Tm
+/F3 9 Tf
+(    participant Run as SimulationRunImpl) Tj
+1 0 0 1 70 431.0 Tm
+/F3 9 Tf
+(    participant Mission as MissionControlImpl) Tj
+1 0 0 1 70 417.0 Tm
+/F3 9 Tf
+(    participant Drone as DroneControlImpl) Tj
+1 0 0 1 70 403.0 Tm
+/F3 9 Tf
+(    participant Algo as MappingAlgorithmImpl) Tj
+1 0 0 1 70 389.0 Tm
+/F3 9 Tf
+(    participant Lidar as MockLidar) Tj
+1 0 0 1 70 375.0 Tm
+/F3 9 Tf
+(    participant Movement as MockMovement) Tj
+1 0 0 1 70 361.0 Tm
+/F3 9 Tf
+(    participant Map as IMutableMap3D) Tj
+1 0 0 1 70 347.0 Tm
+/F3 9 Tf
+() Tj
+1 0 0 1 70 333.0 Tm
+/F3 9 Tf
+(    Main->>Manager: run\(composition, output_path\)) Tj
+1 0 0 1 70 319.0 Tm
+/F3 9 Tf
+(    loop each \(simulation × mission × drone × lidar\)) Tj
+1 0 0 1 70 305.0 Tm
+/F3 9 Tf
+(        Manager->>Factory: create\(sim, mission, drone, lidar, output_path\)) Tj
+1 0 0 1 70 291.0 Tm
+/F3 9 Tf
+(        Factory->>Factory: load hidden_map from .npy) Tj
+1 0 0 1 70 277.0 Tm
+/F3 9 Tf
+(        Factory->>Factory: create output_map \(empty NpyArray\)) Tj
+1 0 0 1 70 263.0 Tm
+/F3 9 Tf
+(        Factory-->>Manager: SimulationRunImpl) Tj
+1 0 0 1 70 249.0 Tm
+/F3 9 Tf
+(        Manager->>Run: run\(\)) Tj
+1 0 0 1 70 235.0 Tm
+/F3 9 Tf
+(        Run->>Mission: runMission\(\)) Tj
+1 0 0 1 70 221.0 Tm
+/F3 9 Tf
+(        loop each step \(up to max_steps\)) Tj
+1 0 0 1 70 207.0 Tm
+/F3 9 Tf
+(            Mission->>Drone: step\(\)) Tj
+1 0 0 1 70 193.0 Tm
+/F3 9 Tf
+(            Drone->>Algo: nextStep\(state, last_scan*\)) Tj
+1 0 0 1 70 179.0 Tm
+/F3 9 Tf
+(            Algo-->>Drone: MappingStepCommand) Tj
+1 0 0 1 70 165.0 Tm
+/F3 9 Tf
+(            opt has movement) Tj
+1 0 0 1 70 151.0 Tm
+/F3 9 Tf
+(                Drone->>Movement: rotate/advance/elevate) Tj
+1 0 0 1 70 137.0 Tm
+/F3 9 Tf
+(                Movement-->>Drone: MovementResult) Tj
+1 0 0 1 70 123.0 Tm
+/F3 9 Tf
+(            end) Tj
+1 0 0 1 70 109.0 Tm
+/F3 9 Tf
+(            opt has scan_orientation) Tj
+1 0 0 1 70 95.0 Tm
+/F3 9 Tf
+(                Drone->>Lidar: scan\(orientation\)) Tj
+1 0 0 1 70 81.0 Tm
+/F3 9 Tf
+(                Lidar-->>Drone: LidarScanResult) Tj
+1 0 0 1 70 67.0 Tm
+/F3 9 Tf
+(                Drone->>Map: ScanResultToVoxels::applyToMap\(...\)) Tj
+ET
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 12 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+14 0 obj
+<< /Length 3802 >>
+stream
+BT
+1 0 0 1 70 792 Tm
+/F3 9 Tf
+(            end) Tj
+1 0 0 1 70 778 Tm
+/F3 9 Tf
+(            Drone-->>Mission: DroneStepResult) Tj
+1 0 0 1 70 764 Tm
+/F3 9 Tf
+(        end) Tj
+1 0 0 1 70 750 Tm
+/F3 9 Tf
+(        Mission->>Map: save\(output_path\)) Tj
+1 0 0 1 70 736 Tm
+/F3 9 Tf
+(        Mission-->>Run: MissionRunResult) Tj
+1 0 0 1 70 722 Tm
+/F3 9 Tf
+(        Run->>Run: MapsComparison::compare\(hidden, output\)) Tj
+1 0 0 1 70 708 Tm
+/F3 9 Tf
+(        Run-->>Manager: SimulationResult) Tj
+1 0 0 1 70 694 Tm
+/F3 9 Tf
+(    end) Tj
+1 0 0 1 70 680 Tm
+/F3 9 Tf
+(    Manager-->>Main: SimulationManagerReport) Tj
+1 0 0 1 50 645.0 Tm
+/F2 13 Tf
+(Design Decisions) Tj
+1 0 0 1 50 620.0 Tm
+/F2 11 Tf
+(1. Self-Contained NPY I/O \(No TinyNPY Dependency\)) Tj
+/F1 10 Tf
+1 0 0 1 50 605.0 Tm
+(We implement our own minimal NpyArray class that reads/writes the .npy format directly. This) Tj
+/F1 10 Tf
+1 0 0 1 50 591.0 Tm
+(eliminates an external dependency while remaining fully compatible with NumPy's output.) Tj
+1 0 0 1 50 570.0 Tm
+/F2 11 Tf
+(2. MockMovement Includes Collision Detection) Tj
+/F1 10 Tf
+1 0 0 1 50 555.0 Tm
+(Unlike the skeleton stub, MockMovement::advance\(\) and elevate\(\) check the hidden map for) Tj
+/F1 10 Tf
+1 0 0 1 50 541.0 Tm
+(obstacles along the path. This prevents the drone from flying through walls, which would make) Tj
+/F1 10 Tf
+1 0 0 1 50 527.0 Tm
+(the simulation physically invalid.) Tj
+1 0 0 1 50 506.0 Tm
+/F2 11 Tf
+(3. BFS Exploration Algorithm) Tj
+/F1 10 Tf
+1 0 0 1 50 491.0 Tm
+(MappingAlgorithmImpl uses a breadth-first exploration strategy:) Tj
+/F1 10 Tf
+1 0 0 1 50 477.0 Tm
+(1. Initial scan: at the starting position, emit 10 scan directions \(8 horizontal + up/down\)) Tj
+/F1 10 Tf
+1 0 0 1 50 463.0 Tm
+(2. Queue neighbors: after each scan, queue all unmapped adjacent voxels) Tj
+/F1 10 Tf
+1 0 0 1 50 449.0 Tm
+(3. Navigate: BFS pathfinding to the next frontier voxel) Tj
+/F1 10 Tf
+1 0 0 1 50 435.0 Tm
+(4. Rescan: on arrival at a new position, scan again) Tj
+/F1 10 Tf
+1 0 0 1 50 421.0 Tm
+(5. Terminate: when the frontier is exhausted \(no reachable unmapped voxels\)) Tj
+1 0 0 1 50 400.0 Tm
+/F2 11 Tf
+(4. ScanResultToVoxels \(Provided Algorithm\)) Tj
+/F1 10 Tf
+1 0 0 1 50 385.0 Tm
+(The ScanResultToVoxels::applyToMap\(\) method \(adapted from the course skeleton\) converts LiDAR) Tj
+/F1 10 Tf
+1 0 0 1 50 371.0 Tm
+(hits into map occupancy states. It marks:) Tj
+/F1 10 Tf
+1 0 0 1 50 357.0 Tm
+(- Path before a hit as Empty) Tj
+/F1 10 Tf
+1 0 0 1 50 343.0 Tm
+(- Hit position as Occupied) Tj
+/F1 10 Tf
+1 0 0 1 50 329.0 Tm
+(- Near-field returns \(<z_min\) as PotentiallyOccupied) Tj
+1 0 0 1 50 308.0 Tm
+/F2 11 Tf
+(5. Map Comparison Algorithm) Tj
+/F1 10 Tf
+1 0 0 1 50 293.0 Tm
+(MapsComparison::compare\(\) computes a score 0..100 based on:) Tj
+/F1 10 Tf
+1 0 0 1 50 279.0 Tm
+(- Voxel-wise agreement between the hidden map \(reference\) and the output map) Tj
+/F1 10 Tf
+1 0 0 1 50 265.0 Tm
+(- False positives \(output says occupied, reference says empty\) are penalized) Tj
+/F1 10 Tf
+1 0 0 1 50 251.0 Tm
+(- Score = correct / \(total + false_positives\) * 100) Tj
+1 0 0 1 50 230.0 Tm
+/F2 11 Tf
+(6. Error Handling) Tj
+/F1 10 Tf
+1 0 0 1 50 215.0 Tm
+(- ErrorHandler \(singleton\) immediately flushes all errors to error_log.txt) Tj
+/F1 10 Tf
+1 0 0 1 50 201.0 Tm
+(- Simulation continues after per-run errors \(score = -1 for failed runs\)) Tj
+/F1 10 Tf
+1 0 0 1 50 187.0 Tm
+(- Fatal configuration errors abort with a message to stderr) Tj
+1 0 0 1 50 159.0 Tm
+/F2 13 Tf
+(File Structure) Tj
+1 0 0 1 70 127.0 Tm
+/F3 9 Tf
+(HW2_CPP/) Tj
+1 0 0 1 70 113.0 Tm
+/F3 9 Tf
+(??? CMakeLists.txt) Tj
+1 0 0 1 70 99.0 Tm
+/F3 9 Tf
+(??? README.md) Tj
+1 0 0 1 70 85.0 Tm
+/F3 9 Tf
+(??? HLD.md) Tj
+1 0 0 1 70 71.0 Tm
+/F3 9 Tf
+(??? include/drone_mapper/       ? All public headers \(interfaces + implementations\)) Tj
+ET
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 14 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+16 0 obj
+<< /Length 1750 >>
+stream
+BT
+1 0 0 1 70 792 Tm
+/F3 9 Tf
+(?   ??? types/                  ? Data type headers) Tj
+1 0 0 1 70 778 Tm
+/F3 9 Tf
+(?   ??? Units.h                 ? mp-units type aliases) Tj
+1 0 0 1 70 764 Tm
+/F3 9 Tf
+(?   ??? I*.h                    ? Interface headers) Tj
+1 0 0 1 70 750 Tm
+/F3 9 Tf
+(?   ??? *Impl.h                 ? Implementation headers) Tj
+1 0 0 1 70 736 Tm
+/F3 9 Tf
+(?   ??? Mock*.h                 ? Mock component headers) Tj
+1 0 0 1 70 722 Tm
+/F3 9 Tf
+(?   ??? ...) Tj
+1 0 0 1 70 708 Tm
+/F3 9 Tf
+(??? src/                        ? Implementation \(.cpp\) + private helpers) Tj
+1 0 0 1 70 694 Tm
+/F3 9 Tf
+(?   ??? *Impl.cpp) Tj
+1 0 0 1 70 680 Tm
+/F3 9 Tf
+(?   ??? Mock*.cpp) Tj
+1 0 0 1 70 666 Tm
+/F3 9 Tf
+(?   ??? YamlParser.{h,cpp}) Tj
+1 0 0 1 70 652 Tm
+/F3 9 Tf
+(?   ??? ErrorHandler.{h,cpp}) Tj
+1 0 0 1 70 638 Tm
+/F3 9 Tf
+(?   ??? drone_mapper_simulation_main.cpp) Tj
+1 0 0 1 70 624 Tm
+/F3 9 Tf
+(?   ??? maps_comparison_main.cpp) Tj
+1 0 0 1 70 610 Tm
+/F3 9 Tf
+(??? tests/) Tj
+1 0 0 1 70 596 Tm
+/F3 9 Tf
+(?   ??? components/             ? 7 component test files) Tj
+1 0 0 1 70 582 Tm
+/F3 9 Tf
+(?   ??? integration/            ? 2 integration test files) Tj
+1 0 0 1 70 568 Tm
+/F3 9 Tf
+(??? inputs/) Tj
+1 0 0 1 70 554 Tm
+/F3 9 Tf
+(    ??? drone/                  ? Drone YAML configs) Tj
+1 0 0 1 70 540 Tm
+/F3 9 Tf
+(    ??? lidar/                  ? Lidar YAML configs) Tj
+1 0 0 1 70 526 Tm
+/F3 9 Tf
+(    ??? mission/                ? Mission YAML configs) Tj
+1 0 0 1 70 512 Tm
+/F3 9 Tf
+(    ??? simulation/             ? Simulation YAML configs) Tj
+1 0 0 1 70 498 Tm
+/F3 9 Tf
+(    ??? map/                    ? .npy map files + generator) Tj
+1 0 0 1 70 484 Tm
+/F3 9 Tf
+(    ??? sim_compose.yaml        ? Simulation composition file) Tj
+ET
+endstream
+endobj
+17 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 16 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+xref
+0 18
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000149 00000 n 
+0000000246 00000 n 
+0000000348 00000 n 
+0000000443 00000 n 
+0000003601 00000 n 
+0000003747 00000 n 
+0000006926 00000 n 
+0000007072 00000 n 
+0000010210 00000 n 
+0000010358 00000 n 
+0000014109 00000 n 
+0000014257 00000 n 
+0000018112 00000 n 
+0000018260 00000 n 
+0000020063 00000 n 
+trailer
+<< /Size 18 /Root 1 0 R >>
+startxref
+20211
+%%EOF

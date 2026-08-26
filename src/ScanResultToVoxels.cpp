@@ -1,0 +1,120 @@
+#include <drone_mapper/ScanResultToVoxels.h>
+
+#include <limits>
+#include <mp-units/math.h>
+
+namespace drone_mapper {
+namespace {
+
+[[nodiscard]] bool isZeroDistance(PhysicalLength distance) {
+    return distance == 0.0 * cm;
+}
+
+[[nodiscard]] bool isMissDistance(PhysicalLength distance) {
+    return distance.numerical_value_in(cm) == std::numeric_limits<double>::max();
+}
+
+[[nodiscard]] Orientation absoluteBeamOrientation(const Orientation& drone_heading,
+                                                   const Orientation& relative_beam) {
+    return Orientation{
+        relative_beam.horizontal + drone_heading.horizontal,
+        relative_beam.altitude + drone_heading.altitude,
+    };
+}
+
+[[nodiscard]] Position3D pointAlongBeam(const Position3D& origin,
+                                         const Orientation& beam_orientation,
+                                         PhysicalLength distance) {
+    const auto cos_altitude = si::cos(beam_orientation.altitude);
+    const auto dx = cos_altitude * si::cos(beam_orientation.horizontal);
+    const auto dy = cos_altitude * si::sin(beam_orientation.horizontal);
+    const auto dz = si::sin(beam_orientation.altitude);
+
+    const double distance_cm = distance.numerical_value_in(cm);
+    const double dir_x = dx.numerical_value_in(mp::one);
+    const double dir_y = dy.numerical_value_in(mp::one);
+    const double dir_z = dz.numerical_value_in(mp::one);
+
+    return Position3D{
+        origin.x + dir_x * distance_cm * x_extent[cm],
+        origin.y + dir_y * distance_cm * y_extent[cm],
+        origin.z + dir_z * distance_cm * z_extent[cm],
+    };
+}
+
+[[nodiscard]] int occupancyPriority(types::VoxelOccupancy occupancy) {
+    switch (occupancy) {
+        case types::VoxelOccupancy::Occupied:           return 3;
+        case types::VoxelOccupancy::Empty:              return 2;
+        case types::VoxelOccupancy::PotentiallyOccupied: return 1;
+        case types::VoxelOccupancy::Unmapped:
+        case types::VoxelOccupancy::OutOfBounds:        return 0;
+    }
+    return 0;
+}
+
+void setIfStronger(IMutableMap3D& output_map,
+                   const Position3D& position,
+                   types::VoxelOccupancy value) {
+    if (!output_map.isInBounds(position)) return;
+    const types::VoxelOccupancy current_value = output_map.atVoxel(position);
+    if (occupancyPriority(value) > occupancyPriority(current_value)) {
+        output_map.set(position, value);
+    }
+}
+
+void markBeamSegment(IMutableMap3D& output_map,
+                     const Position3D& scan_origin,
+                     const Orientation& beam_orientation,
+                     PhysicalLength start_distance,
+                     PhysicalLength end_distance,
+                     PhysicalLength step,
+                     types::VoxelOccupancy value) {
+    for (PhysicalLength distance = start_distance; distance <= end_distance; distance += step) {
+        const Position3D current_point = pointAlongBeam(scan_origin, beam_orientation, distance);
+        if (!output_map.isInBounds(current_point)) break;
+        setIfStronger(output_map, current_point, value);
+    }
+}
+
+} // namespace
+
+void ScanResultToVoxels::applyToMap(IMutableMap3D& output_map,
+                                     const Position3D& scan_origin,
+                                     const Orientation& drone_heading,
+                                     const types::LidarScanResult& scan,
+                                     const types::LidarConfigData& lidar_config) {
+    if (!output_map.isInBounds(scan_origin)) return;
+
+    const PhysicalLength step = 0.1 * output_map.getMapConfig().resolution;
+    if (step <= 0.0 * cm) return;
+
+    for (const types::LidarHit& hit : scan) {
+        const Orientation beam_orientation = absoluteBeamOrientation(drone_heading, hit.angle);
+
+        if (isZeroDistance(hit.distance)) {
+            markBeamSegment(output_map, scan_origin, beam_orientation,
+                            0.0 * cm, lidar_config.z_min, step,
+                            types::VoxelOccupancy::PotentiallyOccupied);
+            continue;
+        }
+
+        if (isMissDistance(hit.distance)) {
+            markBeamSegment(output_map, scan_origin, beam_orientation,
+                            0.0 * cm, lidar_config.z_max, step,
+                            types::VoxelOccupancy::Empty);
+            continue;
+        }
+
+        if (hit.distance > 0.0 * cm) {
+            markBeamSegment(output_map, scan_origin, beam_orientation,
+                            0.0 * cm, hit.distance, step,
+                            types::VoxelOccupancy::Empty);
+            setIfStronger(output_map,
+                          pointAlongBeam(scan_origin, beam_orientation, hit.distance),
+                          types::VoxelOccupancy::Occupied);
+        }
+    }
+}
+
+} // namespace drone_mapper
