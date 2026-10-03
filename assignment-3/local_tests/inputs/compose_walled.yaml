@@ -1,0 +1,11 @@
+simulation_compositions:
+  simulations:
+    - simulation_config: "simulation/walled.yaml"
+      mission_configs:
+        - "mission/tiny.yaml"
+
+  drone_configs:
+    - "drone/drone.yaml"
+
+  lidar_configs:
+    - "lidar/lidar.yaml"

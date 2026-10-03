@@ -1,3 +1,18 @@
+# C++20 Simulation Pipeline
+
+Two related C++20 projects for a 3D drone mapping simulator. Assignment 2 stays at the **repository root**. Assignment 3 is a **separate project** under [`assignment-3/`](assignment-3/) and does not replace or rewrite the original tree.
+
+| Folder | Project | What it is |
+|---|---|---|
+| `/` (this directory) | [Assignment 2 — Drone Mapper](#drone-mapper--assignment-2) | Single-process simulator. Algorithm, mission control, mocks, and scoring are linked together and talk through abstract interfaces. |
+| [`assignment-3/`](assignment-3/) | [Assignment 3 — Concurrent plugin host](assignment-3/README.md) | Same mission model, but the simulator is a host process. It `dlopen`s third-party Algorithm / MissionControl `.so` plugins, runs comparative and competitive campaigns on a thread pool, and writes ranked YAML reports. |
+
+The two assignments share the same physical model (YAML composition × missions × drones × lidars, hidden `.npy` map, MockGPS / MockLidar / MockMovement, Jaccard-style occupancy score). Assignment 3 is the system-design step: **stable APIs, dynamic loading, factory registration, ownership across `dlclose`, and concurrent plugin batches**.
+
+Contributors: Omar Abu Shah (213309941), Jameel Najjar (213727837).
+
+---
+
 # Drone Mapper — Assignment 2
 
 ## Contributors

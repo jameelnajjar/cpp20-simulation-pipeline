@@ -1,0 +1,11 @@
+simulation_compositions:
+  simulations:
+    - simulation_config: "../../inputs/simulation/house_simulation.yaml"
+      mission_configs:
+        - "../../inputs/mission/house_mission_lower.yaml"
+
+  drone_configs:
+    - "../../inputs/drone/drone_small.yaml"
+
+  lidar_configs:
+    - "../../inputs/lidar/lidar_short.yaml"
